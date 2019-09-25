@@ -1,4 +1,8 @@
+![Alt text](/pdv-laravel-vuejs.jpg?raw=true)
+Screenshots de algumas páginas...
+
 # Sistema de registro de vendas desenvolvido com VueJS 2.5 e Laravel 5.8
+
 # Sobre este projeto
 
 Sistema de controle de vendas para lojas, com cadastro de categorias, cadastro de produtos e relatório de vendas.
