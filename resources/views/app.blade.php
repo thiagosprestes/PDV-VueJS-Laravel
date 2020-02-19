@@ -36,7 +36,7 @@
                             <i class="fa fa-shopping-cart" id="icone-menu"></i> Vendas
                         </router-link>
                         <router-link :to="{ name: 'categorias' }" class="list-group-item list-group-item-action bg-dark">
-                            <i class="fa fa-folder" id="icone-menu"></i> categorias
+                            <i class="fa fa-folder" id="icone-menu"></i> Categorias
                         </router-link>
                         <a class="list-group-item list-group-item-action bg-dark" id="menu-relatorios" data-toggle="collapse" data-target="#relatorios" aria-expanded="true" aria-controls="relatorios">
                             <i class="fa fa-chart-bar" id="icone-menu"></i> Relatórios
@@ -69,6 +69,12 @@
                 $("#menu-relatorios").click(function(e) {
                     $("#icone-seta").toggleClass("fa-angle-right fa-angle-down");
                 });
+        
+                if(window.outerWidth < 900) {
+                    $(".list-group-item").click(function() {
+                        $("#wrapper").toggleClass("toggled");
+                    });
+                }
             </script>
         @endauth
     </body>

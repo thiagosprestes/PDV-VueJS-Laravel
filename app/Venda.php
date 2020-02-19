@@ -23,12 +23,12 @@ class Venda extends Model
     {
         $dados = DB::table('vendas')
                     ->select(DB::raw('
-                        strftime("%d/%m", data) as dias,
+                        date_format(data, "%d/%m/%Y") as dias,
                         count(produtos) as produtos,
                         sum(total) as total
                     '))
-                    ->groupBy(DB::raw('strftime("%d/%m", data)'))
-                    ->orderBy('dias', 'DESC')
+                    ->groupBy(DB::raw('date_format(data, "%d/%m/%Y")'))
+                    ->orderBy(DB::raw('str_to_date(dias, "%d/%m/%Y")'), 'DESC')
                     ->paginate(10);
 
         return $dados;
@@ -38,12 +38,12 @@ class Venda extends Model
     {
         $dados = DB::table('vendas')
                     ->select(DB::raw('
-                        strftime("%m/%Y", data) as meseano,
+                        date_format(data, "%m/%Y") as meseano,
                         count(produtos) as produtos, 
                         sum(total) as total
                     '))
-                    ->groupBy(DB::raw('strftime("%m/%Y", data)'))
-                    ->orderBy('meseano', 'DESC')
+                    ->groupBy(DB::raw('date_format(data, "%m/%Y")'))
+                    ->orderBy('data', 'DESC')
                     ->paginate(10);
 
         return $dados;
