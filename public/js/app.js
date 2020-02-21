@@ -2978,6 +2978,23 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_services_venda__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/js/services/venda */ "./resources/js/services/venda.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+var _methods;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3019,10 +3036,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       vendas: {},
+      venda: {
+        status: ''
+      },
       busca: '',
       loader: {
         vendas: false
@@ -3034,7 +3055,8 @@ __webpack_require__.r(__webpack_exports__);
         status: false,
         tipo: '',
         texto: ''
-      }
+      },
+      statusForm: null
     };
   },
   computed: {
@@ -3047,7 +3069,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  methods: {
+  methods: (_methods = {
     mensagem: function mensagem(status, tipo, texto) {
       var _this2 = this;
 
@@ -3058,33 +3080,70 @@ __webpack_require__.r(__webpack_exports__);
         _this2.msg.status = false;
       }, 5000);
     },
-    listar: function listar() {
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      var vm = this;
-      this.loader.vendas = true;
-      _js_services_venda__WEBPACK_IMPORTED_MODULE_0__["default"].lista(page).then(function (response) {
-        vm.vendas = response.data;
-      })["catch"](function () {
-        vm.erro.status = true;
-      })["finally"](function () {
-        vm.loader.vendas = false;
-      });
-    },
-    editar: function editar(data) {
-      var vm = this;
-      vm.venda = data;
-      $('#modal-editar').modal('show');
-    },
-    deletar: function deletar(id) {
+    adicionar: function adicionar(data) {
       var vm = this;
 
-      if (confirm("Tem certeza que deseja excluir este item?")) {
-        _js_services_venda__WEBPACK_IMPORTED_MODULE_0__["default"].apaga(id).then(function (response) {
-          vm.listar();
-          vm.mensagem(true, 'sucesso', 'Venda excluída com sucesso');
-        })["catch"](function () {
-          vm.mensagem(true, 'erro', 'Ocorreu um erro ao excluír a venda');
-        });
+      if (!this.$v.$invalid) {
+        this.statusForm = true;
+
+        if (vm.venda.id) {
+          _js_services_venda__WEBPACK_IMPORTED_MODULE_0__["default"].atualiza(data.id, data).then(function (response) {
+            vm.venda = {};
+            vm.$v.$reset();
+            vm.listar();
+            $('#modal-editar').modal('hide');
+            vm.mensagem(true, 'sucesso', 'Alterações salvas com sucesso');
+          })["catch"](function (error) {
+            vm.venda = {};
+            vm.$v.$reset();
+            $('#modal-editar').modal('hide');
+            vm.mensagem(true, 'erro', 'Ocorreu um erro ao salvar as alterações');
+          });
+        }
+      } else {
+        this.statusForm = false;
+      }
+    }
+  }, _defineProperty(_methods, "mensagem", function mensagem(status, tipo, texto) {
+    var _this3 = this;
+
+    this.msg.status = status;
+    this.msg.tipo = tipo;
+    this.msg.texto = texto;
+    setTimeout(function () {
+      _this3.msg.status = false;
+    }, 5000);
+  }), _defineProperty(_methods, "listar", function listar() {
+    var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    var vm = this;
+    this.loader.vendas = true;
+    _js_services_venda__WEBPACK_IMPORTED_MODULE_0__["default"].lista(page).then(function (response) {
+      vm.vendas = response.data;
+    })["catch"](function () {
+      vm.erro.status = true;
+    })["finally"](function () {
+      vm.loader.vendas = false;
+    });
+  }), _defineProperty(_methods, "editar", function editar(data) {
+    var vm = this;
+    vm.venda = data;
+    $('#modal-editar').modal('show');
+  }), _defineProperty(_methods, "deletar", function deletar(id) {
+    var vm = this;
+
+    if (confirm("Tem certeza que deseja excluir este item?")) {
+      _js_services_venda__WEBPACK_IMPORTED_MODULE_0__["default"].apaga(id).then(function (response) {
+        vm.listar();
+        vm.mensagem(true, 'sucesso', 'Venda excluída com sucesso');
+      })["catch"](function () {
+        vm.mensagem(true, 'erro', 'Ocorreu um erro ao excluír a venda');
+      });
+    }
+  }), _methods),
+  validations: {
+    venda: {
+      status: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
       }
     }
   },
@@ -75779,6 +75838,20 @@ var render = function() {
                     _c(
                       "button",
                       {
+                        staticClass: "btn btn-warning",
+                        attrs: { "data-toggle": "modal" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editar(venda)
+                          }
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
                         staticClass: "btn btn-danger",
                         on: {
                           click: function($event) {
@@ -75804,7 +75877,85 @@ var render = function() {
           ? _c("div", { staticClass: "alert alert-warning" }, [
               _vm._v("Nenhuma venda foi registrada")
             ])
-          : _vm._e()
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "modal",
+          {
+            attrs: {
+              nome: "modal-editar",
+              titulo: "Editar status da venda",
+              textobotao: "Salvar alterações"
+            },
+            on: {
+              acao: function($event) {
+                return _vm.adicionar(_vm.venda)
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "form-group row" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "col-md-12",
+                  class: {
+                    invalid:
+                      _vm.statusForm == false && _vm.$v.venda.status.$invalid
+                  }
+                },
+                [
+                  _c("label", { attrs: { for: "codigo" } }, [_vm._v("Status")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.$v.venda.status.$model,
+                        expression: "$v.venda.status.$model"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    class: {
+                      invalid:
+                        _vm.statusForm == false &&
+                        _vm.$v.venda.status.$dirty &&
+                        _vm.$v.venda.status.$invalid
+                    },
+                    attrs: {
+                      type: "text",
+                      name: "codigo",
+                      id: "codigo",
+                      placeholder: "Código de barras"
+                    },
+                    domProps: { value: _vm.$v.venda.status.$model },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.$v.venda.status,
+                          "$model",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _vm.statusForm == false && _vm.$v.venda.$invalid
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _vm._v(
+                    "Preencha todos os campos da forma correta para registrar um novo produto"
+                  )
+                ])
+              : _vm._e()
+          ]
+        )
       ],
       1
     )

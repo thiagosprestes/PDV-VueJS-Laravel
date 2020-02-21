@@ -26,6 +26,7 @@
                     <td>{{ venda.status }}</td>
                     <td>{{ venda.data }}</td>
                     <td>
+                        <button class="btn btn-warning" data-toggle="modal" v-on:click="editar(venda)">Editar</button>
                         <button class="btn btn-danger" v-on:click="deletar(venda.id)">Excluir</button>
                     </td>
                 </tr>
@@ -34,6 +35,16 @@
             <pagination :data="vendas" @pagination-change-page="listar"></pagination>
 
             <div class="alert alert-warning" v-if="vendas == '' && !loader.vendas">Nenhuma venda foi registrada</div>
+
+            <modal nome="modal-editar" v-on:acao="adicionar(venda)" titulo="Editar status da venda" textobotao="Salvar alterações">                         
+                <div class="form-group row">
+                    <div class="col-md-12" :class="{ invalid: statusForm == false && $v.venda.status.$invalid }">
+                        <label for="codigo">Status</label>
+                        <input type="text" name="codigo" id="codigo" placeholder="Código de barras" class="form-control" v-bind:class="{ invalid: statusForm == false && $v.venda.status.$dirty && $v.venda.status.$invalid }" v-model="$v.venda.status.$model">
+                    </div>
+                </div>
+                <div v-if="statusForm == false && $v.venda.$invalid" class="alert alert-danger">Preencha todos os campos da forma correta para registrar um novo produto</div>
+            </modal>
         </div>
     </pagina>
 </template>
@@ -41,11 +52,15 @@
 <script>
 
 import venda from "@/js/services/venda";
+import { required } from 'vuelidate/lib/validators'
 
 export default {
     data() {
         return {
             vendas: {},
+            venda: {
+                status: ''
+            },
             busca: '',
             loader: {
                 vendas: false
@@ -57,7 +72,8 @@ export default {
                 status: false,
                 tipo: '',
                 texto: ''
-            }
+            },
+            statusForm: null
         }
     },
     computed: {
@@ -69,6 +85,36 @@ export default {
         }
     },
     methods: {
+        mensagem: function (status, tipo, texto) {
+            this.msg.status = status;
+            this.msg.tipo = tipo;
+            this.msg.texto = texto;
+            setTimeout(() => {
+                this.msg.status = false;
+            }, 5000);
+        },
+        adicionar: function (data) {
+            var vm = this;
+            if (!this.$v.$invalid) {
+                this.statusForm = true;
+                if (vm.venda.id) {
+                    venda.atualiza(data.id, data).then((response) => {
+                        vm.venda = {};
+                        vm.$v.$reset();
+                        vm.listar();
+                        $('#modal-editar').modal('hide');
+                        vm.mensagem(true, 'sucesso', 'Alterações salvas com sucesso');
+                    }).catch((error) => {
+                        vm.venda = {};
+                        vm.$v.$reset();
+                        $('#modal-editar').modal('hide');
+                        vm.mensagem(true, 'erro', 'Ocorreu um erro ao salvar as alterações');
+                    })
+                }
+            } else {
+                this.statusForm = false;
+            }
+        },
         mensagem: function (status, tipo, texto) {
             this.msg.status = status;
             this.msg.tipo = tipo;
@@ -105,6 +151,11 @@ export default {
                 })
             }
         }  
+    },
+    validations: {
+        venda: {
+            status: { required }
+        }
     },
     mounted() {
         this.listar();
