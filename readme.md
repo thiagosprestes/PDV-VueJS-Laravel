@@ -20,7 +20,7 @@ Sistema de controle de vendas para lojas, com cadastro de categorias, cadastro d
 * [Vue router](https://router.vuejs.org/) - Rotas
 * [Laravel](https://laravel.com/) - API e login
 * [Vue chartjs](https://vue-chartjs.org/) - Gráfico da página inicial
-* [Vuelidate](https://vuelidate.netlify.com/) - Validação dos fromulários
+* [Vuelidate](https://vuelidate.netlify.com/) - Validação dos formulários
 * [Laravel vue pagination](https://github.com/gilbitron/laravel-vue-pagination) - Paginação
 * [Bootstrap](https://getbootstrap.com/) - Template
 * [Font awesome](https://fontawesome.com/) - Ícones do menu
