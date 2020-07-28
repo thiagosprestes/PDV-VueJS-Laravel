@@ -75630,7 +75630,7 @@ var render = function() {
                   type: "text",
                   name: "busca",
                   id: "busca",
-                  placeholder: "Digite um data..."
+                  placeholder: "Digite uma data..."
                 },
                 domProps: { value: _vm.busca },
                 on: {
@@ -94431,8 +94431,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! E:\xampp\www\PDV-Laravel-vueJS\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! E:\xampp\www\PDV-Laravel-vueJS\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\PDV-VueJS-Laravel\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\PDV-VueJS-Laravel\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
