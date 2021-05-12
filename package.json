@@ -25,7 +25,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "chart.js": "^2.8.0",
+        "chart.js": "^2.9.4",
         "laravel-vue-pagination": "^2.3.0",
         "vue-chartjs": "^3.4.2",
         "vue-router": "^3.1.3",
